@@ -1,0 +1,42 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    ext {
+        kotlin_version = '1.1-M03'
+        redux_kotlin_version = '1.1.0'
+        rx_java_version = '1.2.4'
+        realm_version = '2.2.1'
+
+        android_appcompat_version = '25.1.0'
+        junit_version = '4.12'
+        espresso_version = '2.2.2'
+        mockito_version = '2.4.1'
+    }
+
+    repositories {
+        jcenter()
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
+        }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath "io.realm:realm-gradle-plugin:$realm_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
