@@ -8,10 +8,13 @@ buildscript {
         rx_java_version = '1.2.4'
         realm_version = '2.2.1'
 
-        android_appcompat_version = '25.1.0'
+        android_support_version = '25.1.0'
         junit_version = '4.12'
         espresso_version = '2.2.2'
         mockito_version = '2.4.1'
+        hamkrest_version = '1.2.3.0'
+        spek_version = '1.1.0-beta2'
+        junit_platform_runner_version = '1.0.0-M3'
     }
 
     repositories {
@@ -25,6 +28,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.2.3'
         classpath "io.realm:realm-gradle-plugin:$realm_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_runner_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
