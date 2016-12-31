@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 25
@@ -32,8 +31,14 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$android_support_version"
     compile "com.android.support:support-v4:$android_support_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "com.github.pardom.redux-kotlin:lib:$redux_kotlin_version"
+    compile "com.github.pardom:redux-kotlin:$redux_kotlin_version"
+    compile("com.github.pardom:redux-rxjava-kotlin:$redux_rxjava_kotlin_version") {
+        exclude group: "net.bytebuddy"
+        exclude group: "org.mockito"
+    }
     compile "io.reactivex:rxjava:$rx_java_version"
+    compile "io.reactivex:rxandroid:$rx_android_version"
+    compile "com.google.firebase:firebase-database:$firebase_version"
 
     testCompile "junit:junit:$junit_version"
     testCompile "org.mockito:mockito-core:$mockito_version"
@@ -56,12 +61,4 @@ dependencies {
     })
 }
 
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-    maven {
-        url "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
-    }
-    mavenCentral()
-}
+apply plugin: 'com.google.gms.google-services'

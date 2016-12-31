@@ -3,10 +3,13 @@
 buildscript {
 
     ext {
-        kotlin_version = '1.1-M03'
-        redux_kotlin_version = '1.1.0'
+        kotlin_version = '1.0.6'
+        redux_kotlin_version = '1.2.0'
+        redux_rxjava_kotlin_version = '1.2.0'
         rx_java_version = '1.2.4'
-        realm_version = '2.2.1'
+        rx_android_version = '1.2.1'
+        firebase_version = '10.0.1'
+        google_service_version = '3.0.0'
 
         android_support_version = '25.1.0'
         junit_version = '4.12'
@@ -20,26 +23,30 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            url "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
+            url "https://jitpack.io"
         }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath "io.realm:realm-gradle-plugin:$realm_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.junit.platform:junit-platform-gradle-plugin:$junit_platform_runner_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath "com.google.gms:google-services:$google_service_version"
     }
 }
 
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url "https://jitpack.io"
+        }
     }
 }
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
