@@ -1,5 +1,6 @@
-package me.lazmaid.cleanredux.data
+package me.lazmaid.cleanredux.repository
 
+import me.lazmaid.cleanredux.model.Note
 import rx.Single
 
 /**

@@ -1,4 +1,4 @@
-package me.lazmaid.cleanredux.data
+package me.lazmaid.cleanredux.model
 
 /**
  * Created by VerachadW on 12/31/2016 AD.

@@ -1,7 +1,8 @@
-package me.lazmaid.cleanredux.data
+package me.lazmaid.cleanredux.repository
 
 import com.google.firebase.database.FirebaseDatabase
 import me.lazmaid.cleanredux.extension.listChanged
+import me.lazmaid.cleanredux.model.Note
 import rx.Scheduler
 import rx.Single
 import rx.android.schedulers.AndroidSchedulers

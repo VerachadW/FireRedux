@@ -29,15 +29,20 @@ dependencies {
     compile "com.android.support:appcompat-v7:$android_support_version"
     compile "com.android.support:design:$android_support_version"
     compile "com.android.support:recyclerview-v7:$android_support_version"
-    compile "com.android.support:support-v4:$android_support_version"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "com.github.pardom:redux-kotlin:$redux_kotlin_version"
     compile("com.github.pardom:redux-rxjava-kotlin:$redux_rxjava_kotlin_version") {
         exclude group: "net.bytebuddy"
         exclude group: "org.mockito"
     }
+    compile ("com.github.pardom:redux-observable-kotlin:$redux_observable_kotlin_version") {
+        exclude group: "net.bytebuddy"
+        exclude group: "org.mockito"
+    }
     compile "io.reactivex:rxjava:$rx_java_version"
-    compile "io.reactivex:rxandroid:$rx_android_version"
+    compile "com.github.kittinunf.reactiveandroid:reactiveandroid-ui:$reactive_android_version"
+    compile "com.github.kittinunf.reactiveandroid:reactiveandroid-appcompat-v7:$reactive_android_version"
+    compile "com.github.kittinunf.reactiveandroid:reactiveandroid-design:$reactive_android_version"
     compile "com.google.firebase:firebase-database:$firebase_version"
 
     testCompile "junit:junit:$junit_version"

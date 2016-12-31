@@ -6,8 +6,9 @@ buildscript {
         kotlin_version = '1.0.6'
         redux_kotlin_version = '1.2.0'
         redux_rxjava_kotlin_version = '1.2.0'
+        redux_observable_kotlin_version = '1.2.2'
         rx_java_version = '1.2.4'
-        rx_android_version = '1.2.1'
+        reactive_android_version = '0.3.7'
         firebase_version = '10.0.1'
         google_service_version = '3.0.0'
 
