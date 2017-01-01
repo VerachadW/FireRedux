@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="me.lazmaid.cleanredux.view.home.HomeActivity">
+    tools:context="me.lazmaid.fireredux.me.lazmaid.fireredux.view.home.HomeActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tbHome"
