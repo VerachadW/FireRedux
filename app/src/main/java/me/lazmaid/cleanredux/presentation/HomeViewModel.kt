@@ -1,7 +1,9 @@
 package me.lazmaid.cleanredux.presentation
 
-import me.lazmaid.cleanredux.repository.HomeRepository
+import com.github.kittinunf.result.Result
+import me.lazmaid.cleanredux.extension.FirebaseException
 import me.lazmaid.cleanredux.model.Note
+import me.lazmaid.cleanredux.repository.HomeRepository
 import redux.api.Reducer
 import redux.api.Store
 import redux.applyMiddleware
@@ -16,26 +18,36 @@ import rx.Observable
 class HomeViewModel(private val repository: HomeRepository) : ViewModelStore<HomeViewModel.State>() {
 
     data class State(
-            val items: List<Note> = listOf()
-    )
+            val items: List<Note> = listOf(),
+            val errorMessage: String = "")
 
     sealed class Action {
         class ShowNotesAction(val notes: List<Note>): Action()
+        class ShowErrorAction(val message: String): Action()
         class GetNotesAction: Action()
     }
 
     val reducer = Reducer<State> { state, action ->
         when(action) {
-            is Action.ShowNotesAction -> state.copy(action.notes)
+            is Action.ShowNotesAction -> state.copy(action.notes, errorMessage = "")
+            is Action.ShowErrorAction -> state.copy(errorMessage = action.message)
+            else -> state
         }
-        return@Reducer state
     }
 
-    fun epic() = Epic { actions: Observable<out Any>, _: Store<State> ->
+    fun epic() = Epic { actions: Observable<out Any>, store: Store<State> ->
         actions.ofType(Action.GetNotesAction::class.java).flatMap {
-            repository.getNotes().toObservable()
-        }.map {
-            Action.ShowNotesAction(notes = it)
+            repository.getNotes().map {
+                Result.of(it)
+            }.onErrorReturn {
+                Result.error(it as Exception)
+            }.toObservable()
+        }.map { result ->
+            result.fold(success = {
+                Action.ShowNotesAction(it)
+            }, failure = {
+                Action.ShowErrorAction(it.message ?: "")
+            })
         }
     }
 

@@ -10,7 +10,7 @@ import rx.Single
  * Created by VerachadW on 12/31/2016 AD.
  */
 
-class FirebaseException(val code: Int, message: String) : Throwable(message)
+class FirebaseException(val code: Int, message: String) : Exception(message)
 
 fun <T> DatabaseReference.valueChanged(): Single<T> {
     return Single.create<T> { subscriber ->

@@ -1,6 +1,8 @@
 package me.lazmaid.cleanredux.repository
 
+import com.github.kittinunf.result.Result
 import com.google.firebase.database.FirebaseDatabase
+import me.lazmaid.cleanredux.extension.FirebaseException
 import me.lazmaid.cleanredux.extension.listChanged
 import me.lazmaid.cleanredux.model.Note
 import rx.Scheduler

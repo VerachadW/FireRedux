@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
@@ -43,6 +44,7 @@ dependencies {
     compile "com.github.kittinunf.reactiveandroid:reactiveandroid-ui:$reactive_android_version"
     compile "com.github.kittinunf.reactiveandroid:reactiveandroid-appcompat-v7:$reactive_android_version"
     compile "com.github.kittinunf.reactiveandroid:reactiveandroid-design:$reactive_android_version"
+    compile "com.github.kittinunf.result:result:1.0.4"
     compile "com.google.firebase:firebase-database:$firebase_version"
 
     testCompile "junit:junit:$junit_version"
@@ -58,6 +60,9 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     }
     testCompile("org.junit.platform:junit-platform-runner:$junit_platform_runner_version") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
+    testCompile("com.natpryce:hamkrest:$hamkrest_version") {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     }
 

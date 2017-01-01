@@ -10,10 +10,11 @@ import rx.Observable
 
 abstract class ViewModelStore<S: Any> {
 
-    private val store: Store<S> by lazy { createStore() }
-    val stateChanged: Observable<S> = store.asObservable().distinctUntilChanged().share()
+    val store: Store<S> by lazy { createStore() }
+    // We had to skip the first state changed since createStore() always dispatch INIT action when store is created
+    val stateChanged: Observable<S> by lazy { store.asObservable().skip(1).distinctUntilChanged()  }
 
-    protected abstract fun createStore(): Store<S>
+    abstract fun createStore(): Store<S>
 
     fun dispatch(action: Any?) { store.dispatch(action) }
 

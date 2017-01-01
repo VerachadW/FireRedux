@@ -32,10 +32,10 @@ class HomeActivity : BaseActivity<HomeViewModel>() {
         super.onAttachedToWindow()
 
         val notesObservable = viewModel.stateChanged.flatMap { Observable.just(it.items) }.bindUntilDestroyed()
-        rvNotes.rx_itemsWith(notesObservable, onCreateViewHolder = { parent: ViewGroup?, _: Int ->
+        rvNotes.rx_itemsWith(notesObservable, onCreateViewHolder = { parent: ViewGroup?, viewType: Int ->
             val view = layoutInflater.inflate(R.layout.item_note, parent, false)
             HomeNoteItemViewHolder(view)
-        }, onBindViewHolder = { holder: HomeNoteItemViewHolder, _: Int, item: Note ->
+        }, onBindViewHolder = { holder: HomeNoteItemViewHolder, position: Int, item: Note ->
             holder.bindView(item)
         })
 
