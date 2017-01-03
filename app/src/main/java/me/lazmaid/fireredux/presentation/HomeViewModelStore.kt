@@ -1,11 +1,13 @@
 package me.lazmaid.fireredux.presentation
 
 import com.github.kittinunf.result.Result
-import me.lazmaid.fireredux.extension.FirebaseException
 import me.lazmaid.fireredux.model.Note
+import me.lazmaid.fireredux.navigation.DetailViewKey
+import me.lazmaid.fireredux.navigation.ViewNavigatorService
 import me.lazmaid.fireredux.repository.NoteRepository
 import redux.api.Reducer
 import redux.api.Store
+import redux.api.enhancer.Middleware
 import redux.applyMiddleware
 import redux.observable.Epic
 import redux.observable.createEpicMiddleware
@@ -15,7 +17,8 @@ import rx.Observable
  * Created by VerachadW on 12/26/2016 AD.
  */
 
-class HomeViewModelStore(private val repository: NoteRepository) : ViewModelStore<HomeViewModelStore.State>() {
+class HomeViewModelStore(private val navigator: ViewNavigatorService,
+                         private val repository: NoteRepository) : ViewModelStore<HomeViewModelStore.State>() {
 
     data class State(
             val items: List<Note> = listOf(),
@@ -25,6 +28,7 @@ class HomeViewModelStore(private val repository: NoteRepository) : ViewModelStor
         class ShowNotesAction(val notes: List<Note>): Action()
         class ShowErrorAction(val message: String): Action()
         class GetNotesAction: Action()
+        class OpenNoteDetailAction(val note: Note): Action()
     }
 
     val reducer = Reducer<State> { state, action ->
@@ -51,13 +55,19 @@ class HomeViewModelStore(private val repository: NoteRepository) : ViewModelStor
         }
     }
 
+    val navigationMiddleware = Middleware<HomeViewModelStore.State> { store, next, action ->
+        when(action){
+            is Action.OpenNoteDetailAction -> {
+                navigator.navigateTo(DetailViewKey(action.note))
+            }
+        }
+        next.dispatch(action)
+    }
+
     override fun createStore(): Store<State> = redux.createStore(
             reducer = reducer, initialState = State(),
-            enhancer = applyMiddleware(createEpicMiddleware(getNotesEpic))
+            enhancer = applyMiddleware(createEpicMiddleware(getNotesEpic),
+                    navigationMiddleware)
     )
-
-    fun getNotes() {
-        store.dispatch(Action.GetNotesAction())
-    }
 
 }

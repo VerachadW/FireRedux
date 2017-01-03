@@ -6,6 +6,7 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isBlank
 import me.lazmaid.fireredux.extension.FirebaseException
 import me.lazmaid.fireredux.model.Note
+import me.lazmaid.fireredux.navigation.ViewNavigatorService
 import me.lazmaid.fireredux.presentation.HomeViewModelStore
 import me.lazmaid.fireredux.presentation.HomeViewModelStore.Action
 import me.lazmaid.fireredux.repository.NoteRepository
@@ -28,10 +29,11 @@ import rx.observers.TestSubscriber
 class HomeViewModelSpec : Spek({
     describe("HomeViewModelStore class") {
         val mockRepository = Mockito.mock(NoteRepository::class.java)
-        var viewModel = HomeViewModelStore(mockRepository)
+        val mockNavigator = Mockito.mock(ViewNavigatorService::class.java)
+        var viewModel = HomeViewModelStore(mockNavigator, mockRepository)
         val state = HomeViewModelStore.State()
         beforeEachTest {
-            viewModel = HomeViewModelStore(mockRepository)
+            viewModel = HomeViewModelStore(mockNavigator, mockRepository)
         }
         describe("Reducer") {
             on("GetNotesAction is dispatched") {

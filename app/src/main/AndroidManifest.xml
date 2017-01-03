@@ -10,6 +10,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".HomeActivity">
         </activity>
+        <activity android:name=".view.detail.DetailActivity">
+        </activity>
     </application>
 
 </manifest>
