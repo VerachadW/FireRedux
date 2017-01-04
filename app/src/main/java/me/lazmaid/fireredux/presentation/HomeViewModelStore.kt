@@ -28,7 +28,7 @@ class HomeViewModelStore(private val navigator: ViewNavigatorService,
         class ShowNotesAction(val notes: List<Note>): Action()
         class ShowErrorAction(val message: String): Action()
         class GetNotesAction: Action()
-        class OpenNoteDetailAction(val note: Note): Action()
+        class OpenNoteDetailAction(val noteId: String): Action()
     }
 
     val reducer = Reducer<State> { state, action ->
@@ -58,7 +58,7 @@ class HomeViewModelStore(private val navigator: ViewNavigatorService,
     val navigationMiddleware = Middleware<HomeViewModelStore.State> { store, next, action ->
         when(action){
             is Action.OpenNoteDetailAction -> {
-                navigator.navigateTo(DetailViewKey(action.note))
+                navigator.navigateTo(DetailViewKey(action.noteId))
             }
         }
         next.dispatch(action)

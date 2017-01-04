@@ -6,6 +6,7 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isBlank
 import me.lazmaid.fireredux.extension.FirebaseException
 import me.lazmaid.fireredux.model.Note
+import me.lazmaid.fireredux.navigation.DetailViewKey
 import me.lazmaid.fireredux.navigation.ViewNavigatorService
 import me.lazmaid.fireredux.presentation.HomeViewModelStore
 import me.lazmaid.fireredux.presentation.HomeViewModelStore.Action
@@ -16,8 +17,9 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.*
 import rx.Observable
 import rx.observers.TestSubscriber
 
@@ -28,8 +30,8 @@ import rx.observers.TestSubscriber
 @RunWith(JUnitPlatform::class)
 class HomeViewModelSpec : Spek({
     describe("HomeViewModelStore class") {
-        val mockRepository = Mockito.mock(NoteRepository::class.java)
-        val mockNavigator = Mockito.mock(ViewNavigatorService::class.java)
+        val mockRepository = mock(NoteRepository::class.java)
+        val mockNavigator = mock(ViewNavigatorService::class.java)
         var viewModel = HomeViewModelStore(mockNavigator, mockRepository)
         val state = HomeViewModelStore.State()
         beforeEachTest {
@@ -83,7 +85,17 @@ class HomeViewModelSpec : Spek({
                 }
             }
         }
-
+        describe("Navigation") {
+            describe("navigate to Note Detail") {
+                it("should navigate to NoteDetail View with selected note id") {
+                    val viewKey = DetailViewKey("note-<id>")
+                    viewModel.dispatch(Action.OpenNoteDetailAction("note-<id>"))
+                    val captor = ArgumentCaptor.forClass(DetailViewKey::class.java)
+                    verify(mockNavigator, Mockito.times(1)).navigateTo(captor.capture() ?: viewKey)
+                    assertThat(captor.value.selectedNoteId, equalTo("note-<id>"))
+                }
+            }
+        }
     }
 })
 
