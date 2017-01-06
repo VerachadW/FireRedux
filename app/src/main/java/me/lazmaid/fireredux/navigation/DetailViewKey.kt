@@ -2,7 +2,6 @@ package me.lazmaid.fireredux.navigation
 
 import android.content.Context
 import android.content.Intent
-import me.lazmaid.fireredux.model.Note
 import me.lazmaid.fireredux.view.detail.DetailActivity
 
 /**

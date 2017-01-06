@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CleanRedux</string>
+    <string name="note_title_hint"/>
 </resources>
