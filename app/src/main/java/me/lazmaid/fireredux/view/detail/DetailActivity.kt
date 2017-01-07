@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 import me.lazmaid.fireredux.R
 import me.lazmaid.fireredux.model.Note
 import me.lazmaid.fireredux.navigation.DetailViewKey
-import me.lazmaid.fireredux.navigation.ViewNavigator
+import me.lazmaid.fireredux.navigation.StoreNavigator
 import me.lazmaid.fireredux.presentation.DetailViewModelStore
 import me.lazmaid.fireredux.repository.NoteRepositoryImpl
 import me.lazmaid.fireredux.view.BaseActivity
@@ -14,7 +14,7 @@ import me.lazmaid.fireredux.view.BaseActivity
 class DetailActivity : BaseActivity<DetailViewModelStore>() {
 
     override val viewModelStore: DetailViewModelStore by lazy {
-        DetailViewModelStore(ViewNavigator(this), NoteRepositoryImpl())
+        DetailViewModelStore(StoreNavigator(this), NoteRepositoryImpl())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

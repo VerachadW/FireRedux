@@ -8,12 +8,13 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import me.lazmaid.fireredux.extension.FirebaseException
 import me.lazmaid.fireredux.model.Note
 import me.lazmaid.fireredux.navigation.DetailViewKey
-import me.lazmaid.fireredux.navigation.ViewNavigatorService
+import me.lazmaid.fireredux.navigation.ViewNavigator
 import me.lazmaid.fireredux.presentation.HomeViewModelStore
 import me.lazmaid.fireredux.presentation.HomeViewModelStore.Action
 import me.lazmaid.fireredux.repository.NoteRepository
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
@@ -31,20 +32,20 @@ import rx.observers.TestSubscriber
 class HomeViewModelSpec : Spek({
     describe("HomeViewModelStore class") {
         val mockRepository = mock(NoteRepository::class.java)
-        val mockNavigator = mock(ViewNavigatorService::class.java)
+        val mockNavigator = mock(ViewNavigator::class.java)
         var viewModel = HomeViewModelStore(mockNavigator, mockRepository)
         val state = HomeViewModelStore.State()
         beforeEachTest {
             viewModel = HomeViewModelStore(mockNavigator, mockRepository)
         }
         describe("Reducer") {
-            on("GetNotesAction is dispatched") {
+            given("GetNotesAction is dispatched") {
                 it("should not mutate the state") {
                     val newState = viewModel.reducer.reduce(state, Action.GetNotesAction())
                     assertThat(newState, equalTo(state))
                 }
             }
-            on("ShowNotesAction is dispatched") {
+            given("ShowNotesAction is dispatched") {
                 it("should mutate the state with new note list and clear error message") {
                     val data = listOf(Note(title = "Note#1"), Note(title = "Note#2"))
                     val newState = viewModel.reducer.reduce(state, Action.ShowNotesAction(data))
@@ -52,7 +53,7 @@ class HomeViewModelSpec : Spek({
                     assertThat(newState.errorMessage, isBlank)
                 }
             }
-            on("ShowErrorAction is dispatched") {
+            given("ShowErrorAction is dispatched") {
                 it("should mutate the state with error message") {
                     val newState = viewModel.reducer.reduce(state, Action.ShowErrorAction("<error>"))
                     assertThat(newState.errorMessage, equalTo("<error>"))

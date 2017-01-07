@@ -1,10 +1,12 @@
 package me.lazmaid.fireredux.presentation
 
 import me.lazmaid.fireredux.model.Note
+import me.lazmaid.fireredux.navigation.StoreNavigator
 import me.lazmaid.fireredux.navigation.ViewNavigator
 import me.lazmaid.fireredux.repository.NoteRepository
 import redux.api.Reducer
 import redux.api.Store
+import redux.api.enhancer.Middleware
 import redux.applyMiddleware
 
 /**
@@ -21,6 +23,7 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
     sealed class Action {
         class ShowNoteDetail(val note: Note) : Action()
         class UpdateNote(val id: String, val title: String, val content: String) : Action()
+        class Back : Action()
     }
 
     val reducer = Reducer<State> { state, action ->
@@ -44,9 +47,16 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
 //        }
 //    }
 
+    val navigationMiddleware = Middleware<DetailViewModelStore.State> { store, next, action ->
+        when(action) {
+            is Action.Back -> navigator.back()
+        }
+        next.dispatch(action)
+    }
+
     override fun createStore(): Store<State> = redux.createStore(reducer = reducer,
             initialState = State(),
-            enhancer = applyMiddleware())
+            enhancer = applyMiddleware(navigationMiddleware))
 
 }
 

@@ -7,7 +7,7 @@ import com.github.kittinunf.reactiveandroid.support.v7.widget.rx_itemsWith
 import kotlinx.android.synthetic.main.activity_home.*
 import me.lazmaid.fireredux.R
 import me.lazmaid.fireredux.model.Note
-import me.lazmaid.fireredux.navigation.ViewNavigator
+import me.lazmaid.fireredux.navigation.StoreNavigator
 import me.lazmaid.fireredux.presentation.HomeViewModelStore
 import me.lazmaid.fireredux.presentation.HomeViewModelStore.Action
 import me.lazmaid.fireredux.repository.NoteRepositoryImpl
@@ -16,7 +16,7 @@ import rx.Observable
 
 class HomeActivity : BaseActivity<HomeViewModelStore>() {
     override val viewModelStore: HomeViewModelStore by lazy {
-        HomeViewModelStore(ViewNavigator(this), NoteRepositoryImpl())
+        HomeViewModelStore(StoreNavigator(this), NoteRepositoryImpl())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

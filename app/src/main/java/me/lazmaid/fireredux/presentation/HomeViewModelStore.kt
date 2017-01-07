@@ -3,7 +3,7 @@ package me.lazmaid.fireredux.presentation
 import com.github.kittinunf.result.Result
 import me.lazmaid.fireredux.model.Note
 import me.lazmaid.fireredux.navigation.DetailViewKey
-import me.lazmaid.fireredux.navigation.ViewNavigatorService
+import me.lazmaid.fireredux.navigation.ViewNavigator
 import me.lazmaid.fireredux.repository.NoteRepository
 import redux.api.Reducer
 import redux.api.Store
@@ -17,7 +17,7 @@ import rx.Observable
  * Created by VerachadW on 12/26/2016 AD.
  */
 
-class HomeViewModelStore(private val navigator: ViewNavigatorService,
+class HomeViewModelStore(private val navigator: ViewNavigator,
                          private val repository: NoteRepository) : ViewModelStore<HomeViewModelStore.State>() {
 
     data class State(
