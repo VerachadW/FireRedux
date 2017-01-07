@@ -4,6 +4,7 @@ import com.google.firebase.database.DatabaseError
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isBlank
+import com.nhaarman.mockito_kotlin.argumentCaptor
 import me.lazmaid.fireredux.extension.FirebaseException
 import me.lazmaid.fireredux.model.Note
 import me.lazmaid.fireredux.navigation.DetailViewKey
@@ -17,7 +18,6 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import org.junit.platform.runner.JUnitPlatform
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import rx.Observable
@@ -88,11 +88,12 @@ class HomeViewModelSpec : Spek({
         describe("Navigation") {
             describe("navigate to Note Detail") {
                 it("should navigate to NoteDetail View with selected note id") {
-                    val viewKey = DetailViewKey("note-<id>")
-                    viewModel.dispatch(Action.OpenNoteDetailAction("note-<id>"))
-                    val captor = ArgumentCaptor.forClass(DetailViewKey::class.java)
-                    verify(mockNavigator, Mockito.times(1)).navigateTo(captor.capture() ?: viewKey)
-                    assertThat(captor.value.selectedNoteId, equalTo("note-<id>"))
+                    val fakeNote = Note(title = "<title>")
+                    viewModel.dispatch(Action.OpenNoteDetailAction(fakeNote))
+                    argumentCaptor<DetailViewKey>().apply {
+                        verify(mockNavigator, Mockito.times(1)).navigateTo(capture())
+                        assertThat(firstValue.selectedNote, equalTo(fakeNote))
+                    }
                 }
             }
         }

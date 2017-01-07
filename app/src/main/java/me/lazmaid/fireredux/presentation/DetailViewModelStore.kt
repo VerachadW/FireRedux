@@ -18,11 +18,31 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
             val note: Note? = null
     )
 
+    sealed class Action {
+        class ShowNoteDetail(val note: Note) : Action()
+        class UpdateNote(val id: String, val title: String, val content: String) : Action()
+    }
+
     val reducer = Reducer<State> { state, action ->
         when(action) {
+            is Action.ShowNoteDetail -> state.copy(note = action.note)
             else -> state
         }
     }
+
+//    val updateNoteEpic = Epic { actions, store ->
+//        actions.ofType(Action.UpdateNote::class.java).flatMap {
+//            repository.getNote(it.id).map {
+//                Result.of(it)
+//            }.onErrorReturn {
+//                Result.error(it as Exception)
+//            }
+//        }.map { result ->
+//            result.fold(success = {
+//
+//            })
+//        }
+//    }
 
     override fun createStore(): Store<State> = redux.createStore(reducer = reducer,
             initialState = State(),

@@ -17,15 +17,6 @@ abstract class BaseActivity<out V: ViewModelStore<*>>: AppCompatActivity() {
     private val onDestroySubject = BehaviorSubject.create<Boolean>(false)
     private lateinit var stateChangedSubscription: Subscription
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        viewModelStore.stateChanged.publish()
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         onDestroySubject.onNext(true)

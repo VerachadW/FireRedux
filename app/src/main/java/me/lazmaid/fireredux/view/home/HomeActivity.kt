@@ -42,7 +42,4 @@ class HomeActivity : BaseActivity<HomeViewModelStore>() {
 
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-    }
 }
