@@ -9,5 +9,6 @@ import rx.Observable
 
 interface NoteRepository {
     fun getNotes(): Observable<List<Note>>
+    fun getNote(id: String): Observable<Note>
 }
 
