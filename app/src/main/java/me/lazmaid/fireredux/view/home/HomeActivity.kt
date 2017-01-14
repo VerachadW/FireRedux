@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
 import com.github.kittinunf.reactiveandroid.support.v7.widget.rx_itemsWith
+import com.github.kittinunf.reactiveandroid.view.rx_click
 import kotlinx.android.synthetic.main.activity_home.*
 import me.lazmaid.fireredux.R
 import me.lazmaid.fireredux.model.Note
@@ -26,11 +27,10 @@ class HomeActivity : BaseActivity<HomeViewModelStore>() {
         rvNotes.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity)
         }
-        viewModelStore.dispatch(Action.GetNotesAction())
-    }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+        fabCreate.rx_click().subscribe {
+            viewModelStore.dispatch(Action.CreateNewNoteAction())
+        }
 
         val notesObservable = viewModelStore.stateChanged.flatMap { Observable.just(it.items) }.bindUntilDestroyed()
         rvNotes.rx_itemsWith(notesObservable, onCreateViewHolder = { parent: ViewGroup?, viewType: Int ->
@@ -40,6 +40,7 @@ class HomeActivity : BaseActivity<HomeViewModelStore>() {
             holder.bindView(item)
         })
 
+        viewModelStore.dispatch(Action.GetNotesAction())
     }
 
 }

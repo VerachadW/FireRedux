@@ -25,14 +25,15 @@ class HomeViewModelStore(private val navigator: ViewNavigator,
             val errorMessage: String = "")
 
     sealed class Action {
-        class ShowNotesAction(val notes: List<Note>): Action()
-        class ShowErrorAction(val message: String): Action()
-        class GetNotesAction: Action()
-        class OpenNoteDetailAction(val note: Note): Action()
+        class ShowNotesAction(val notes: List<Note>) : Action()
+        class ShowErrorAction(val message: String) : Action()
+        class GetNotesAction : Action()
+        class OpenNoteDetailAction(val note: Note) : Action()
+        class CreateNewNoteAction() : Action()
     }
 
     val reducer = Reducer<State> { state, action ->
-        when(action) {
+        when (action) {
             is Action.ShowNotesAction -> state.copy(action.notes, errorMessage = "")
             is Action.ShowErrorAction -> state.copy(errorMessage = action.message)
             else -> state
@@ -56,9 +57,12 @@ class HomeViewModelStore(private val navigator: ViewNavigator,
     }
 
     val navigationMiddleware = Middleware<HomeViewModelStore.State> { store, next, action ->
-        when(action){
+        when (action) {
             is Action.OpenNoteDetailAction -> {
                 navigator.navigateTo(DetailViewKey(action.note))
+            }
+            is Action.CreateNewNoteAction -> {
+                navigator.navigateTo(DetailViewKey())
             }
         }
         next.dispatch(action)
