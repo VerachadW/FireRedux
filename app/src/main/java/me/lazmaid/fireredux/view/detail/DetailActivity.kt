@@ -1,6 +1,7 @@
 package me.lazmaid.fireredux.view.detail
 
 import android.os.Bundle
+import android.widget.Toast
 import com.github.kittinunf.reactiveandroid.widget.rx_text
 import kotlinx.android.synthetic.main.activity_detail.*
 import me.lazmaid.fireredux.R
@@ -31,6 +32,15 @@ class DetailActivity : BaseActivity<DetailViewModelStore>() {
                 .cast(CharSequence::class.java).bindUntilDestroyed())
         etContent.rx_text.bindTo(noteObservable.map(Note::content)
                 .cast(CharSequence::class.java).bindUntilDestroyed())
+
+        stateObservable.map { it.exitMessage }.filter(String::isNotBlank)
+                .bindUntilDestroyed()
+                .doOnNext {
+                    setResult(RESULT_OK)
+                    viewModelStore.dispatch(DetailViewModelStore.Action.Back())
+                }.subscribe {
+                    Toast.makeText(this@DetailActivity, it, Toast.LENGTH_SHORT).show()
+                }
     }
 
 }

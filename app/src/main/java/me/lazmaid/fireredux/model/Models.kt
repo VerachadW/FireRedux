@@ -12,4 +12,7 @@ data class Note(var id: String = "note-${System.currentTimeMillis()}", var title
     companion object {
         @JvmField val CREATOR = PaperParcelNote.CREATOR
     }
+
+    fun toMap(): Map<String, Any> =
+        mapOf("id" to id, "title" to title, "content" to content)
 }

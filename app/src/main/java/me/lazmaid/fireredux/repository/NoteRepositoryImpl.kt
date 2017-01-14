@@ -2,7 +2,6 @@ package me.lazmaid.fireredux.repository
 
 import com.google.firebase.database.FirebaseDatabase
 import me.lazmaid.fireredux.extension.listChangedOnce
-import me.lazmaid.fireredux.extension.valueChanged
 import me.lazmaid.fireredux.model.Note
 import rx.Observable
 import rx.Scheduler
@@ -14,13 +13,26 @@ import rx.schedulers.Schedulers
  */
 
 class NoteRepositoryImpl(private val observerScheduler: Scheduler = AndroidSchedulers.mainThread()) : NoteRepository {
-    override fun getNote(id: String): Observable<Note> {
-        return FirebaseDatabase.getInstance().reference.orderByChild("id").startAt(id).limitToFirst(1).ref.valueChanged()
-    }
 
     override fun getNotes(): Observable<List<Note>> {
         return FirebaseDatabase.getInstance().reference.listChangedOnce<Note>()
                 .subscribeOn(Schedulers.io()).observeOn(observerScheduler)
     }
+
+    override fun createNote(title: String, content: String): Observable<Note> {
+        return Observable.create {
+            val newNode = FirebaseDatabase.getInstance().reference.child("notes").push()
+            val note = Note(title, content)
+            newNode.updateChildren(note.toMap(), { databaseError, databaseReference ->
+                if (databaseError != null) {
+                    it.onError(databaseError.toException())
+                } else {
+                    it.onNext(note)
+                    it.onCompleted()
+                }
+            })
+        }
+    }
+
 
 }
