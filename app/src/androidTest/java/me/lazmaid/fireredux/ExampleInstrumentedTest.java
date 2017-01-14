@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("me.lazmaid.cleanredux", appContext.getPackageName());
+        assertEquals("me.lazmaid.fireredux", appContext.getPackageName());
     }
 }

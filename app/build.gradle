@@ -7,7 +7,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "me.lazmaid.cleanredux"
+        applicationId "me.lazmaid.fireredux"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1

@@ -29,7 +29,7 @@ class HomeViewModelStore(private val navigator: ViewNavigator,
         class ShowErrorAction(val message: String) : Action()
         class GetNotesAction : Action()
         class OpenNoteDetailAction(val note: Note) : Action()
-        class CreateNewNoteAction() : Action()
+        class CreateNewNoteAction : Action()
     }
 
     val reducer = Reducer<State> { state, action ->

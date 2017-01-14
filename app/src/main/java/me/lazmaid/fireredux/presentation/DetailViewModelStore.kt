@@ -20,19 +20,19 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
                            private val repository: NoteRepository) : ViewModelStore<DetailViewModelStore.State>(){
 
     enum class Mode {
-        CREATE_OR_UPDATE,
-        NORMAL
+        CREATE,
+        UPDATE
     }
 
     data class State(
             val note: Note? = null,
-            val mode: Mode = Mode.NORMAL,
+            val mode: Mode = Mode.CREATE,
             val exitMessage: String = "",
             val errorMessage: String = ""
     )
 
     sealed class Action {
-        class ShowNoteDetail(val note: Note) : Action()
+        class ShowNoteDetail(val note: Note?) : Action()
         class CreateNote(val title: String, val content: String) : Action()
         class NoteCreated(val note: Note) : Action()
         class ShowCreateError(val errorMessage: String) : Action()
@@ -41,7 +41,13 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
 
     val reducer = Reducer<State> { state, action ->
         when(action) {
-            is Action.ShowNoteDetail -> state.copy(note = action.note)
+            is Action.ShowNoteDetail ->  {
+                if (action.note != null) {
+                    state.copy(mode = Mode.UPDATE, note = action.note)
+                } else {
+                    state.copy(mode = Mode.CREATE, note = Note())
+                }
+            }
             is Action.NoteCreated -> {
                 val message = "${action.note.title} is created!!"
                 state.copy(exitMessage = message)

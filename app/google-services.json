@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:169710774798:android:5922a819468f8b72",
+        "mobilesdk_app_id": "1:169710774798:android:bec6171ab864d84e",
         "android_client_info": {
-          "package_name": "me.lazmaid.cleanredux"
+          "package_name": "me.lazmaid.fireredux"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "169710774798-k7vr7u6jnk87voidru3i2d2khkl5ccip.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "me.lazmaid.cleanredux",
-            "certificate_hash": "CBAD0EACAA39120CEB06B8932AA5DCCFBBC4B1A5"
-          }
-        },
         {
           "client_id": "169710774798-4thogblcko1nsrmevdpmekgflc5k3lcl.apps.googleusercontent.com",
           "client_type": 3
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "169710774798-4thogblcko1nsrmevdpmekgflc5k3lcl.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
