@@ -65,7 +65,8 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
 
     val createNoteEpic = Epic<State> { actions, store ->
         actions.ofType(Action.CreateOrUpdateNote::class.java)
-                .filter { store.state.mode == Mode.CREATE }.flatMap {
+        .filter { store.state.mode == Mode.CREATE }
+        .flatMap {
             repository.createNote(it.title, it.content).map {
                 Result.of(it)
             }.onErrorReturn {
@@ -82,7 +83,8 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
 
     val updateNoteEpic = Epic<State> { actions, store ->
         actions.ofType(Action.CreateOrUpdateNote::class.java)
-                .filter{ store.state.mode == Mode.UPDATE }.flatMap {
+        .filter{ store.state.mode == Mode.UPDATE }
+        .flatMap {
             repository.updateNote(store.state.note!!.id, it.title, it.content).map {
                 Result.of(it)
             }.onErrorReturn {

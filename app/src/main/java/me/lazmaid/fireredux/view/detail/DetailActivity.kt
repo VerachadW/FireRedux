@@ -49,6 +49,13 @@ class DetailActivity : BaseActivity<DetailViewModelStore>() {
             Toast.makeText(this@DetailActivity, it, Toast.LENGTH_SHORT).show()
         }
 
+        stateObservable.map { it.errorMessage }
+            .filter(String::isNotBlank)
+            .bindUntilDestroyed()
+            .subscribe {
+                Toast.makeText(this@DetailActivity, it, Toast.LENGTH_SHORT).show()
+            }
+
         val modeObservable = stateObservable.map { it.mode }.share()
 
         modeObservable.filter { it == DetailViewModelStore.Mode.CREATE }.map{ "Create Note" }.bindTo(tbDetail.rx_title)
@@ -69,10 +76,14 @@ class DetailActivity : BaseActivity<DetailViewModelStore>() {
                 viewModelStore.dispatch(DetailViewModelStore.Action.Back())
             }
             R.id.miDone -> {
-                viewModelStore.dispatch(DetailViewModelStore.Action.CreateOrUpdateNote(
-                        title = etTitle.text.toString(),
-                        content = etContent.text.toString()
-                ))
+                if(etTitle.text.isBlank() && etContent.text.isBlank()) {
+                    viewModelStore.dispatch(DetailViewModelStore.Action.ShowError("Please type something!!"))
+                } else {
+                    viewModelStore.dispatch(DetailViewModelStore.Action.CreateOrUpdateNote(
+                            title = etTitle.text.toString(),
+                            content = etContent.text.toString()
+                    ))
+                }
             }
         }
         return super.onOptionsItemSelected(item)
