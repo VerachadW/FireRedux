@@ -34,7 +34,7 @@ class HomeViewModelStore(private val navigator: ViewNavigator,
 
     val reducer = Reducer<State> { state, action ->
         when (action) {
-            is Action.ShowNotesAction -> state.copy(action.notes, errorMessage = "")
+            is Action.ShowNotesAction -> state.copy(items = action.notes, errorMessage = "")
             is Action.ShowErrorAction -> state.copy(errorMessage = action.message)
             else -> state
         }

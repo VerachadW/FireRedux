@@ -15,14 +15,14 @@ import rx.schedulers.Schedulers
 class NoteRepositoryImpl(private val observerScheduler: Scheduler = AndroidSchedulers.mainThread()) : NoteRepository {
 
     override fun getNotes(): Observable<List<Note>> {
-        return FirebaseDatabase.getInstance().reference.listChangedOnce<Note>()
+        return FirebaseDatabase.getInstance().reference.child("notes").listChangedOnce<Note>()
                 .subscribeOn(Schedulers.io()).observeOn(observerScheduler)
     }
 
     override fun createNote(title: String, content: String): Observable<Note> {
         return Observable.create {
             val newNode = FirebaseDatabase.getInstance().reference.child("notes").push()
-            val note = Note(title, content)
+            val note = Note(title = title, content = content)
             newNode.updateChildren(note.toMap(), { databaseError, databaseReference ->
                 if (databaseError != null) {
                     it.onError(databaseError.toException())

@@ -4,7 +4,7 @@
 
     <item android:title="Done"
           android:id="@+id/miDone"
-          android:showAsAction="always"
+          app:showAsAction="always"
           android:checkable="false"
           android:icon="@drawable/ic_done"/>
 </menu>

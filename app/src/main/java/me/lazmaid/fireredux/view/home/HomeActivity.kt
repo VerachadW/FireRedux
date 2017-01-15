@@ -2,6 +2,7 @@ package me.lazmaid.fireredux.view.home
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.ViewGroup
 import com.github.kittinunf.reactiveandroid.support.v7.widget.rx_itemsWith
 import com.github.kittinunf.reactiveandroid.view.rx_click
@@ -32,12 +33,20 @@ class HomeActivity : BaseActivity<HomeViewModelStore>() {
             viewModelStore.dispatch(Action.CreateNewNoteAction())
         }
 
-        val notesObservable = viewModelStore.stateChanged.flatMap { Observable.just(it.items) }.bindUntilDestroyed()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val stateObservable = viewModelStore.stateChanged.share()
+        val notesObservable = stateObservable.map { it.items }.bindUntilDestroyed()
         rvNotes.rx_itemsWith(notesObservable, onCreateViewHolder = { parent: ViewGroup?, viewType: Int ->
             val view = layoutInflater.inflate(R.layout.item_note, parent, false)
             HomeNoteItemViewHolder(view)
         }, onBindViewHolder = { holder: HomeNoteItemViewHolder, position: Int, item: Note ->
             holder.bindView(item)
+            holder.itemView.rx_click().bindUntilDestroyed().subscribe {
+                viewModelStore.dispatch(Action.OpenNoteDetailAction(item))
+            }
         })
 
         viewModelStore.dispatch(Action.GetNotesAction())

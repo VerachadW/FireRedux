@@ -49,7 +49,7 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
                 }
             }
             is Action.NoteCreated -> {
-                val message = "${action.note.title} is created!!"
+                val message = if(state.mode == Mode.CREATE) "${action.note.title} is created!!" else "${action.note.title} is updated!!"
                 state.copy(exitMessage = message)
             }
             is Action.ShowCreateError -> state.copy(errorMessage = action.errorMessage)
@@ -75,7 +75,7 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
 
     val navigationMiddleware = Middleware<State> { store, next, action ->
         when(action) {
-            is Action.Back -> navigator.back()
+            is Action.Back, is Action.NoteCreated -> navigator.back()
         }
         next.dispatch(action)
     }
