@@ -8,7 +8,7 @@ import paperparcel.PaperParcelable
  */
 
 @PaperParcel
-data class Note(var id: String = "note-${System.currentTimeMillis()}", var title: String = "", var content: String = "") : PaperParcelable {
+data class Note(var key: String = "", var id: String = "note-${System.currentTimeMillis()}", var title: String = "", var content: String = "") : PaperParcelable {
     companion object {
         @JvmField val CREATOR = PaperParcelNote.CREATOR
     }

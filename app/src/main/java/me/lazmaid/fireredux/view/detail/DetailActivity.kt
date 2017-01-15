@@ -69,7 +69,7 @@ class DetailActivity : BaseActivity<DetailViewModelStore>() {
                 viewModelStore.dispatch(DetailViewModelStore.Action.Back())
             }
             R.id.miDone -> {
-                viewModelStore.dispatch(DetailViewModelStore.Action.CreateNote(
+                viewModelStore.dispatch(DetailViewModelStore.Action.CreateOrUpdateNote(
                         title = etTitle.text.toString(),
                         content = etContent.text.toString()
                 ))

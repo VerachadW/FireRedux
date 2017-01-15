@@ -47,8 +47,8 @@ class DetailViewModelSpec : Spek({
                     assertThat(newState.exitMessage, equalTo("Test is created!!"))
                 }
             }
-            given("ShowCreateError is dispatched") {
-                val action = DetailViewModelStore.Action.ShowCreateError("<error-message>")
+            given("ShowError is dispatched") {
+                val action = DetailViewModelStore.Action.ShowError("<error-message>")
                 it("should mutate the state with errorMessage") {
                     val newState = viewModelStore.reducer.reduce(viewModelStore.store.state, action)
                     assertThat(newState.errorMessage, equalTo("<error-message>"))
@@ -56,23 +56,23 @@ class DetailViewModelSpec : Spek({
             }
         }
         describe("CreateNoteEpic") {
-           given("CreateNote is dispatched") {
+           given("CreateOrUpdateNote is dispatched") {
                on("Success") {
                    it("should map into NoteCreated action") {
                        val subscriber = TestSubscriber<Any>()
                        whenever(mockRepository.createNote("<title>", "<content>")).thenReturn(Observable.just(Note("<title>", "<content>")))
-                       val actionObservable = viewModelStore.createNoteEpic.map(Observable.just(DetailViewModelStore.Action.CreateNote("<title>", "<content>")), viewModelStore.store)
+                       val actionObservable = viewModelStore.createNoteEpic.map(Observable.just(DetailViewModelStore.Action.CreateOrUpdateNote("<title>", "<content>")), viewModelStore.store)
                        actionObservable.subscribe(subscriber)
                        assertThat(subscriber.onNextEvents[0] is DetailViewModelStore.Action.NoteCreated, equalTo(true))
                    }
                }
                on("Failure") {
-                   it("should map into ShowCreateError action") {
+                   it("should map into ShowError action") {
                        val subscriber = TestSubscriber<Any>()
                        whenever(mockRepository.createNote("<title>", "<content>")).thenReturn(Observable.error(IllegalStateException()))
-                       val actionObservable = viewModelStore.createNoteEpic.map(Observable.just(DetailViewModelStore.Action.CreateNote("<title>", "<content>")), viewModelStore.store)
+                       val actionObservable = viewModelStore.createNoteEpic.map(Observable.just(DetailViewModelStore.Action.CreateOrUpdateNote("<title>", "<content>")), viewModelStore.store)
                        actionObservable.subscribe(subscriber)
-                       assertThat(subscriber.onNextEvents[0] is DetailViewModelStore.Action.ShowCreateError, equalTo(true))
+                       assertThat(subscriber.onNextEvents[0] is DetailViewModelStore.Action.ShowError, equalTo(true))
 
                    }
                }

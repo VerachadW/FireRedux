@@ -10,6 +10,7 @@ import redux.api.Store
 import redux.api.enhancer.Middleware
 import redux.applyMiddleware
 import redux.observable.Epic
+import redux.observable.combineEpics
 import redux.observable.createEpicMiddleware
 
 /**
@@ -33,9 +34,10 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
 
     sealed class Action {
         class ShowNoteDetail(val note: Note?) : Action()
-        class CreateNote(val title: String, val content: String) : Action()
-        class NoteCreated(val note: Note) : Action()
-        class ShowCreateError(val errorMessage: String) : Action()
+        class CreateOrUpdateNote(val title: String, val content: String) : Action()
+        class NoteUpdated(val noteTitle: String) : Action()
+        class NoteCreated(val noteTitle: String) : Action()
+        class ShowError(val errorMessage: String) : Action()
         class Back : Action()
     }
 
@@ -49,16 +51,21 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
                 }
             }
             is Action.NoteCreated -> {
-                val message = if(state.mode == Mode.CREATE) "${action.note.title} is created!!" else "${action.note.title} is updated!!"
+                val message = "${action.noteTitle} is created!!"
                 state.copy(exitMessage = message)
             }
-            is Action.ShowCreateError -> state.copy(errorMessage = action.errorMessage)
+            is Action.NoteUpdated -> {
+                val message =  "${action.noteTitle} is updated!!"
+                state.copy(exitMessage = message)
+            }
+            is Action.ShowError -> state.copy(errorMessage = action.errorMessage)
             else -> state
         }
     }
 
     val createNoteEpic = Epic<State> { actions, store ->
-        actions.ofType(Action.CreateNote::class.java).flatMap {
+        actions.ofType(Action.CreateOrUpdateNote::class.java)
+                .filter { store.state.mode == Mode.CREATE }.flatMap {
             repository.createNote(it.title, it.content).map {
                 Result.of(it)
             }.onErrorReturn {
@@ -68,21 +75,38 @@ class DetailViewModelStore(private val navigator: ViewNavigator,
             result.fold(success = {
                 Action.NoteCreated(it)
             }, failure = {
-                Action.ShowCreateError(it.message ?: "")
+                Action.ShowError(it.message ?: "")
+            })
+        }
+    }
+
+    val updateNoteEpic = Epic<State> { actions, store ->
+        actions.ofType(Action.CreateOrUpdateNote::class.java)
+                .filter{ store.state.mode == Mode.UPDATE }.flatMap {
+            repository.updateNote(store.state.note!!.id, it.title, it.content).map {
+                Result.of(it)
+            }.onErrorReturn {
+                Result.error(it as Exception)
+            }
+        }.map { result ->
+            result.fold(success = {
+                Action.NoteUpdated(it)
+            }, failure = {
+                Action.ShowError(it.message ?: "")
             })
         }
     }
 
     val navigationMiddleware = Middleware<State> { store, next, action ->
         when(action) {
-            is Action.Back, is Action.NoteCreated -> navigator.back()
+            is Action.Back, is Action.NoteCreated, is Action.NoteUpdated -> navigator.back()
         }
         next.dispatch(action)
     }
 
     override fun createStore(): Store<State> = redux.createStore(reducer = reducer,
             initialState = State(),
-            enhancer = applyMiddleware(navigationMiddleware, createEpicMiddleware(createNoteEpic)))
+            enhancer = applyMiddleware(navigationMiddleware, createEpicMiddleware(combineEpics(createNoteEpic, updateNoteEpic))))
 
 }
 

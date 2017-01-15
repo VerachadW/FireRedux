@@ -9,6 +9,7 @@ import rx.Observable
 
 interface NoteRepository {
     fun getNotes(): Observable<List<Note>>
-    fun createNote(title: String, content: String): Observable<Note>
+    fun createNote(title: String, content: String): Observable<String>
+    fun updateNote(noteId: String, title: String, content: String): Observable<String>
 }
 
