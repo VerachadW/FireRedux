@@ -23,6 +23,14 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+    packagingOptions {
+        exclude 'META-INF/lib_main.kotlin_module'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/MANIFEST.MF'
+    }
 }
 
 dependencies {
@@ -36,6 +44,7 @@ dependencies {
     compile("com.github.pardom:redux-rxjava-kotlin:$redux_rxjava_kotlin_version") {
         exclude group: "net.bytebuddy"
         exclude group: "org.mockito"
+        exclude group: "org.jetbrains"
     }
     compile ("com.github.pardom:redux-observable-kotlin:$redux_observable_kotlin_version") {
         exclude group: "net.bytebuddy"
