@@ -1,6 +1,11 @@
 package me.lazmaid.fireredux.view.detail
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import com.github.kittinunf.reactiveandroid.rx.bindTo
+import com.github.kittinunf.reactiveandroid.support.v7.widget.rx_title
 import com.github.kittinunf.reactiveandroid.widget.rx_text
 import kotlinx.android.synthetic.main.activity_detail.*
 import me.lazmaid.fireredux.R
@@ -20,9 +25,12 @@ class DetailActivity : BaseActivity<DetailViewModelStore>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        setSupportActionBar(tbDetail)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
-        val note = intent.getParcelableExtra<Note>(DetailViewKey.KEY_SELECTED_NOTE)
-        viewModelStore.dispatch(DetailViewModelStore.Action.ShowNoteDetail(note))
+    override fun onStart() {
+        super.onStart()
 
         val stateObservable = viewModelStore.stateChanged.share()
 
@@ -31,6 +39,43 @@ class DetailActivity : BaseActivity<DetailViewModelStore>() {
                 .cast(CharSequence::class.java).bindUntilDestroyed())
         etContent.rx_text.bindTo(noteObservable.map(Note::content)
                 .cast(CharSequence::class.java).bindUntilDestroyed())
+
+        stateObservable.map { it.exitMessage }.filter(String::isNotBlank)
+                .bindUntilDestroyed()
+                .doOnNext {
+                    setResult(RESULT_OK)
+                    viewModelStore.dispatch(DetailViewModelStore.Action.Back())
+                }.subscribe {
+            Toast.makeText(this@DetailActivity, it, Toast.LENGTH_SHORT).show()
+        }
+
+        val modeObservable = stateObservable.map { it.mode }.share()
+
+        modeObservable.filter { it == DetailViewModelStore.Mode.CREATE }.map{ "Create Note" }.bindTo(tbDetail.rx_title)
+        modeObservable.filter { it == DetailViewModelStore.Mode.UPDATE }.map{ "Update Note" }.bindTo(tbDetail.rx_title)
+
+        val note = intent.getParcelableExtra<Note>(DetailViewKey.KEY_SELECTED_NOTE)
+        viewModelStore.dispatch(DetailViewModelStore.Action.ShowNoteDetail(note))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                viewModelStore.dispatch(DetailViewModelStore.Action.Back())
+            }
+            R.id.miDone -> {
+                viewModelStore.dispatch(DetailViewModelStore.Action.CreateNote(
+                        title = etTitle.text.toString(),
+                        content = etContent.text.toString()
+                ))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

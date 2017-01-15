@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import me.lazmaid.fireredux.model.Note
 import rx.Observable
 import rx.Single
 
@@ -17,7 +18,7 @@ fun <T> DatabaseReference.valueChangedOnce(): Observable<T> {
     return this.valueChanged<T>().take(1)
 }
 
-fun <T> DatabaseReference.listChangedOnce(): Observable<List<T>> {
+inline fun <reified T: Any> DatabaseReference.listChangedOnce(): Observable<List<T>> {
     return this.listChanged<T>().take(1)
 }
 
@@ -31,13 +32,12 @@ fun <T> DatabaseReference.valueChanged(): Observable<T> {
             @Suppress("UNCHECKED_CAST")
             override fun onDataChange(data: DataSnapshot) {
                 subscriber.onNext(data as T)
-                subscriber.onCompleted()
             }
         })
     }
 }
 
-fun <T> DatabaseReference.listChanged(): Observable<List<T>> {
+inline fun <reified T: Any> DatabaseReference.listChanged(): Observable<List<T>> {
     return Observable.create<List<T>> { subscriber ->
         addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
@@ -46,8 +46,10 @@ fun <T> DatabaseReference.listChanged(): Observable<List<T>> {
 
             @Suppress("UNCHECKED_CAST")
             override fun onDataChange(data: DataSnapshot) {
-                subscriber.onNext(data.children as List<T>)
-                subscriber.onCompleted()
+                val list = data.children.map {
+                    it.getValue(T::class.java)
+                }
+                subscriber.onNext(list)
             }
         })
     }

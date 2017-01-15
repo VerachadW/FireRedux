@@ -23,7 +23,7 @@ abstract class BaseActivity<out V: ViewModelStore<*>>: AppCompatActivity() {
     }
 
     fun <T> Observable<T>.bindUntilDestroyed(): Observable<T> {
-        return takeUntil(onDestroySubject.asObservable())
+        return takeUntil(onDestroySubject.asObservable().filter { it })
     }
 
 }

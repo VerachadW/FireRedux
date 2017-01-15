@@ -12,7 +12,7 @@ abstract class ViewModelStore<S: Any> {
 
     val store: Store<S> by lazy { createStore() }
     // We had to skip the first state changed since createStore() always dispatch INIT action when store is created
-    val stateChanged: Observable<S> by lazy { store.asObservable().skip(1).distinctUntilChanged()  }
+    val stateChanged: Observable<S> by lazy { store.asObservable().distinctUntilChanged()  }
 
     abstract fun createStore(): Store<S>
 

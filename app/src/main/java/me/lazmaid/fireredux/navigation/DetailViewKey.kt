@@ -9,7 +9,7 @@ import me.lazmaid.fireredux.view.detail.DetailActivity
  * Created by VerachadW on 1/3/2017 AD.
  */
 
-class DetailViewKey(val selectedNote: Note) : ViewKey {
+class DetailViewKey(val selectedNote: Note? = null) : ViewKey {
     companion object {
         val KEY_SELECTED_NOTE = "KEY_SELECTED_NOTE"
     }
